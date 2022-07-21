@@ -1,0 +1,3 @@
+venv/
+video_store/media
+video_store/**/__pycache__
