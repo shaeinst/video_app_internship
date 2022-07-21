@@ -1,4 +1,3 @@
-from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -32,7 +31,7 @@ class VideoUpload(APIView):
         if serializer.is_valid():
             uploadedfile = request.FILES["upload"]
 
-            # video sizde handling
+            # video size handling
             files_size = uploadedfile.size
             # 1GB = 1073741824 Bytes
             if files_size > 1073741824:
@@ -67,14 +66,16 @@ class VideoPrice(APIView):
             duration = inquiry_data["duration"]
 
             if type not in ["mkv", "mp4"]:
-                return JsonResponse({"type": "we only support mp4 and mkv format"})
+                err_msg = {
+                    "type": "we only support mp4 and mkv format",
+                }
+                return Response(err_msg, status=status.HTTP_400_BAD_REQUEST)
 
             if video_size > 1000:
-                return JsonResponse(
-                    {
-                        "size": "size can't be more that 1000MB",
-                    }
-                )
+                err_msg = {
+                    "size": "size can't be more that 1000MB",
+                }
+                return Response(err_msg, status=status.HTTP_400_BAD_REQUEST)
 
             cost = 12.5
             if video_size <= 500:
